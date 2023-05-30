@@ -31,7 +31,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
     const { value, focused } = state;
     const intervalId = useRef<null | number>(null);
 
-    const onChangeHandler = (event: { target: { value: any; }; }) => {
+    const onChangeHandler = (event: { target: { value: string; }; }) => {
         if (intervalId.current) clearInterval(intervalId.current);
         const newVal = event.target.value;
         onChange(fieldName, newVal);
