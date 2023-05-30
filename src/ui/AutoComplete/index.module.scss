@@ -1,0 +1,36 @@
+.autoComplete {
+  min-width: 250px;
+  position: relative;
+  display: inline-flex;
+  .inputField {
+    width: 100%;
+    height: 30px;
+    border: 1px solid grey;
+    padding-left: 10px;
+    padding-right: 32px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    &:hover,
+    &:focus {
+      &:not([disabled]) {
+        border-color: #4096ff;
+      }
+    }
+    &:disabled {
+
+    }
+  }
+
+  .clearBtn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    cursor: pointer;
+    img {
+      width: 16px;
+    }
+  }
+}
