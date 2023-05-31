@@ -3,7 +3,7 @@ which implements shouldComponentUpdate method with shallow comparison of props a
 
 If we draw a list of items based on props and if parent component re-renders and we have props
 reference change, items component will re-render but if we use PureComponent, the shallow comparison will happen
-and it will prevent unnecessary re-render
+and shouldComponentUpdate will compare and find out if really it needs to be updated
 
 2. There can be some cases when context will not trigger re-render, and shouldComponentUpdate can't be triggered to
 understand whether the component needs to be updated
@@ -21,4 +21,28 @@ of application also.
 6. We use HOCs to share some common logic and we can consider usage of HOCs in situations like:
 HOC for authentication/permissions, for themes or for common animations
 
-7.
+7. They all have different syntax and we use in different situations
+    1. We use promises with reject callbacks and listen catch method to get an error
+       state of promise
+    2. We use callbacks with try catch and get error state
+    3. We use try catch with async functions too to get error
+
+8. setState takes 2 arguments, new state and a callback function and it is async because instead of doing immediately
+update and re-render the component, it will schedule state change update and perform a batch of update in one phase
+
+9. Steps I used to migrate class to functional component:
+    Understand the logic of the component
+    Copy JSX and create variables or initial state for JSX
+    Convert state to use state and lifecycle methods to hooks
+    Change how refs are defined
+    Test component
+
+10. We can load styles with different ways:
+ 1. like importing scss file in component import '../styles.scss' with using node sass
+ 2. we can import styles with syntax import styles from '../styles.scss'; and write className={styles.container} and
+    it will make encapsulated classnames
+ 3. We can write inline styling
+ 4. We can use css in js approach and it will work with skinning system as well
+
+
+11. We can use dangerouslySetInnerHTML like I used in autocomplete component :)
