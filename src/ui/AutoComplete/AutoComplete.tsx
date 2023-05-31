@@ -1,7 +1,8 @@
-import React, { useState, FC, useRef } from 'react';
+import React, {useState, FC, useRef} from 'react';
 import cn from 'classnames';
 import styles from './index.module.scss';
 import CloseIcon from './assets/close.svg';
+import useOutsideClick from './hooks/useOutsideClick';
 
 type AutoCompleteProps = {
     onProcessSearch: (val: string) => void;
@@ -30,6 +31,11 @@ const AutoComplete: FC<AutoCompleteProps> = ({
     });
     const { value, focused } = state;
     const intervalId = useRef<null | number>(null);
+    const elementRef = useRef(null);
+
+    useOutsideClick(elementRef, () => {
+        seState({ ...state, focused: false });
+    });
 
     const onChangeHandler = (event: { target: { value: string; }; }) => {
         if (intervalId.current) clearInterval(intervalId.current);
@@ -64,9 +70,9 @@ const AutoComplete: FC<AutoCompleteProps> = ({
     }
 
     return (
-        <div className={styles.autoComplete}>
+        <div className={styles.autoComplete} ref={elementRef}>
             <input
-                onFocus={() => seState({ ...state, focused: true })}
+                onFocus={() => seState((prev) => ({ ...prev, focused: true }))}
                 className={styles.inputField}
                 onChange={onChangeHandler}
                 placeholder={placeholder}

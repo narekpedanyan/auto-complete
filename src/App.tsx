@@ -21,8 +21,7 @@ function App() {
         matchUsers: [],
         usersLoading: false,
     });
-    const { matchUsers, matchProducts, productsLoading } = state;
-    console.log(state, 'state');
+    const { matchUsers, usersLoading, matchProducts, productsLoading, productName, userName } = state;
 
     const productsSearchHandle = (searchStr: string) => {
         setState({ ...state, productsLoading: true });
@@ -40,18 +39,24 @@ function App() {
     }
 
     const usersSearchHandler = (searchStr: string) => {
-        setState({ ...state, usersLoading: true });
+        setState((prev) => ({ ...prev, usersLoading: true }));
         getUsersMatch(searchStr)
             .then((data: any) => {
-                setState({
-                    ...state,
+                setState((prev) => ({
+                    ...prev,
                     matchUsers: data,
                     usersLoading: false,
-                });
+                }));
             })
             .catch((err) => {
                 console.log(err);
             });
+    }
+
+    const showFilledData = () => {
+        const userNameTxt = `user name is ${userName}`;
+        const productNameTxt = `selected product is ${productName}`;
+        alert(`${userName && userNameTxt} ${(userName && productName) && 'and'} ${productName && productNameTxt}`);
     }
 
     const handleChange = useCallback(
@@ -79,7 +84,7 @@ function App() {
                         placeholder="Search for users"
                         fieldName="userName"
                         options={matchUsers}
-                        loading={productsLoading}
+                        loading={usersLoading}
                     />
                 </div>
                 <div>
@@ -92,6 +97,15 @@ function App() {
                         loading={productsLoading}
                     />
                 </div>
+                {
+                    (userName || productName) && (
+                        <div>
+                            <button type="button" onClick={showFilledData}>
+                                Click to see names
+                            </button>
+                        </div>
+                    )
+                }
             </div>
         </div>
     );
