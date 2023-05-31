@@ -90,6 +90,7 @@ function App() {
                         fieldName="userName"
                         options={matchUsers}
                         loading={usersLoading}
+                        value={userName}
                     />
                 </div>
                 <div>
@@ -100,6 +101,7 @@ function App() {
                         fieldName="productName"
                         options={matchProducts}
                         loading={productsLoading}
+                        value={productName}
                     />
                 </div>
                 {

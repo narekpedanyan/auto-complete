@@ -11,40 +11,32 @@ type AutoCompleteProps = {
     placeholder: string;
     fieldName: string;
     loading: boolean;
+    value: string;
     throttleTime?: number;
     disabled?: boolean;
 };
 
 const AutoComplete: FC<AutoCompleteProps> = ({
-                                                 onProcessSearch,
-                                                 onChange,
-                                                 options = [],
-                                                 placeholder ,
-                                                 fieldName,
-                                                 throttleTime = 300,
-                                                 disabled = false,
-    loading
+     onProcessSearch,
+     onChange,
+     options = [],
+     placeholder ,
+     fieldName,
+     throttleTime = 300,
+     disabled = false,
+     loading,
+     value
     }) => {
-    const [state, seState] = useState({
-        value: '',
-        focused: false
-    });
-    const { value, focused } = state;
+    const [focused, setFocused] = useState(false);
     const intervalId = useRef<null | number>(null);
     const elementRef = useRef(null);
 
-    useOutsideClick(elementRef, () => {
-        seState({ ...state, focused: false });
-    });
+    useOutsideClick(elementRef, () => setFocused(false));
 
     const onChangeHandler = (event: { target: { value: string; }; }) => {
         if (intervalId.current) clearInterval(intervalId.current);
         const newVal = event.target.value;
         onChange(fieldName, newVal);
-        seState((prev) => ({
-            ...prev,
-            value: newVal
-        }));
         if (newVal) {
             intervalId.current = window.setTimeout(() => {
                 onProcessSearch(newVal);
@@ -54,19 +46,11 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 
     const onSelect = (newVal: string) => {
         onChange(fieldName, newVal, true);
-        seState((prev) => ({
-            ...prev,
-            value: newVal,
-            focused: false
-        }));
+        setFocused(false);
     }
 
     const clearSearchKey = () => {
         onChange(fieldName, '');
-        seState((prev) => ({
-            ...prev,
-            value: ''
-        }));
     }
 
     const getMarkedLabel = useCallback(
@@ -80,7 +64,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
     return (
         <div className={styles.autoComplete} ref={elementRef}>
             <input
-                onFocus={() => seState((prev) => ({ ...prev, focused: true }))}
+                onFocus={() => setFocused(true)}
                 className={styles.inputField}
                 onChange={onChangeHandler}
                 placeholder={placeholder}
@@ -90,10 +74,12 @@ const AutoComplete: FC<AutoCompleteProps> = ({
             />
             {
                 focused && options.length > 0 && (
-                    <div className={cn(styles.autocompleteOptions, loading ? styles.loading : null)}>
+                    <div
+                        className={cn(styles.autocompleteOptions, loading ? styles.loading : null)}>
                         {
                             options.map((item: Record<string, string>, index: number) => (
                                     <div key={`${item.name}${index}`}
+                                         data-testid="option"
                                          className={styles.optionItem}
                                          onClick={() => onSelect(item.name)}
                                          role="presentation"
@@ -107,7 +93,12 @@ const AutoComplete: FC<AutoCompleteProps> = ({
             }
             {
                 value && (
-                    <button type="button" className={styles.clearBtn} onClick={clearSearchKey}>
+                    <button
+                        data-testid="clear"
+                        type="button"
+                        className={styles.clearBtn}
+                        onClick={clearSearchKey}
+                    >
                         <img src={CloseIcon} alt="" />
                     </button>
                 )
