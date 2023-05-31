@@ -1,4 +1,4 @@
-import React, {useState, FC, useRef} from 'react';
+import React, {useState, FC, useRef, useCallback} from 'react';
 import cn from 'classnames';
 import styles from './index.module.scss';
 import CloseIcon from './assets/close.svg';
@@ -69,6 +69,14 @@ const AutoComplete: FC<AutoCompleteProps> = ({
         }));
     }
 
+    const getMarkedLabel = useCallback(
+        (label: string) => {
+            const regex = new RegExp( '(' + value + ')', 'gi' );
+            return label.replace(regex, "<span>$1</span>" );
+        },
+        [value]
+    )
+
     return (
         <div className={styles.autoComplete} ref={elementRef}>
             <input
@@ -85,12 +93,13 @@ const AutoComplete: FC<AutoCompleteProps> = ({
                     <div className={cn(styles.autocompleteOptions, loading ? styles.loading : null)}>
                         {
                             options.map((item: Record<string, string>, index: number) => (
-                                <div key={`${item.name}${index}`}
-                                     className={styles.optionItem}
-                                     onClick={() => onSelect(item.name)}
-                                >
-                                    {item.name}
-                                </div>)
+                                    <div key={`${item.name}${index}`}
+                                         className={styles.optionItem}
+                                         onClick={() => onSelect(item.name)}
+                                         role="presentation"
+                                         dangerouslySetInnerHTML={{ __html: getMarkedLabel(item.name)}}
+                                    />
+                                )
                             )
                         }
                     </div>

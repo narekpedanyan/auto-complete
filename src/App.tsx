@@ -23,41 +23,39 @@ function App() {
     });
     const { matchUsers, usersLoading, matchProducts, productsLoading, productName, userName } = state;
 
-    const productsSearchHandle = (searchStr: string) => {
-        setState({ ...state, productsLoading: true });
-        getProductsMatch(searchStr)
-            .then((data: any) => {
-                setState({
-                    ...state,
-                    matchProducts: data,
-                    productsLoading: false,
+    const productsSearchHandle = useCallback(
+        (searchStr: string) => {
+            setState((prev) => ({ ...prev, productsLoading: true }));
+            getProductsMatch(searchStr)
+                .then((data: any) => {
+                    setState((prev) => ({
+                        ...prev,
+                        matchProducts: data,
+                        productsLoading: false,
+                    }));
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
+        }, []
+    )
 
-    const usersSearchHandler = (searchStr: string) => {
-        setState((prev) => ({ ...prev, usersLoading: true }));
-        getUsersMatch(searchStr)
-            .then((data: any) => {
-                setState((prev) => ({
-                    ...prev,
-                    matchUsers: data,
-                    usersLoading: false,
-                }));
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
-
-    const showFilledData = () => {
-        const userNameTxt = `user name is ${userName}`;
-        const productNameTxt = `selected product is ${productName}`;
-        alert(`${userName && userNameTxt} ${(userName && productName) && 'and'} ${productName && productNameTxt}`);
-    }
+    const usersSearchHandler = useCallback(
+        (searchStr: string) => {
+            setState((prev) => ({ ...prev, usersLoading: true }));
+            getUsersMatch(searchStr)
+                .then((data: any) => {
+                    setState((prev) => ({
+                        ...prev,
+                        matchUsers: data,
+                        usersLoading: false,
+                    }));
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }, []
+    );
 
     const handleChange = useCallback(
         (name: string, value: string, isAutocomplete?: boolean) => {
@@ -74,6 +72,13 @@ function App() {
             })
         }, []
     );
+
+    const showFilledData = () => {
+        const userNameTxt = `user name is ${userName}`;
+        const productNameTxt = `selected product is ${productName}`;
+        alert(`${userName && userNameTxt} ${(userName && productName) && 'and'} ${productName && productNameTxt}`);
+    }
+
     return (
         <div className="app">
             <div className="container">
