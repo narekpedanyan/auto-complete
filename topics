@@ -1,0 +1,24 @@
+1. PureComponent is optimized version of component
+which implements shouldComponentUpdate method with shallow comparison of props and state.
+
+If we draw a list of items based on props and if parent component re-renders and we have props
+reference change, items component will re-render but if we use PureComponent, the shallow comparison will happen
+and it will prevent unnecessary re-render
+
+2. There can be some cases when context will not trigger re-render, and shouldComponentUpdate can't be triggered to
+understand whether the component needs to be updated
+
+3. There are a few ways to pass information from child component to parent component: callback functions, context api
+or state management tools like redux ...
+
+4. To prevent re-rendering component in React we can use React.memo HOC which will compare prev and new props and
+determine if component needs to be updated and even we can pass custom function to compare props with custom logic.
+Another way is using shouldComponent update in class components
+
+5. React fragment is feature to prevent adding unnecessary wrapper elements and reducing elements can help performance
+of application also.
+
+6. We use HOCs to share some common logic and we can consider usage of HOCs in situations like:
+HOC for authentication/permissions, for themes or for common animations
+
+7.
